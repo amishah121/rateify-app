@@ -74,6 +74,34 @@ class HomeFragment : Fragment() {
         startSpotifyAuthActivity.launch(intent)
     }
 
+    private suspend fun fetchNewReleases(accessToken: String): List<SpotifyAlbum> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.getNewReleases("Bearer $accessToken")
+
+                if (response.isSuccessful) {
+                    val albumsResponse = response.body()
+                    albumsResponse?.albums?.items ?: emptyList()
+                } else {
+                    throw Exception("Failed to fetch new releases: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                throw Exception("Failed to fetch new releases: ${e.message}")
+            }
+        }
+    }
+
+    private fun updateRecyclerView(albums: List<SpotifyAlbum>, recyclerView: RecyclerView) {
+        // Check if the context and albums are not null
+        if (context != null && albums.isNotEmpty()) {
+            recyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.adapter = AlbumAdapter(albums)
+        } else {
+            Log.e("HomeFragment", "Context is null or albums list is empty.")
+        }
+    }
+
     private fun fetchAlbums() {
         accessToken?.let { token ->
             Log.d("HomeFragment", "Fetching albums with token: $token")
@@ -81,9 +109,9 @@ class HomeFragment : Fragment() {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
                     val newReleases = fetchNewReleases(token)
-
                     updateRecyclerView(newReleases, newReleasesRecyclerView)
 
+                    // Fetch and update recommended albums similarly if needed
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Log.e("HomeFragment", "Failed to fetch albums: ${e.message}")
@@ -91,27 +119,6 @@ class HomeFragment : Fragment() {
             }
         } ?: run {
             Log.e("HomeFragment", "Access token is null, cannot fetch albums.")
-        }
-    }
-
-    private suspend fun fetchNewReleases(accessToken: String): List<SpotifyAlbum> {
-        return withContext(Dispatchers.IO) {
-            val response = apiService.getNewReleases("Bearer $accessToken")
-
-            if (response.isSuccessful) {
-                val albumsResponse = response.body()
-                albumsResponse?.albums?.items ?: emptyList()
-            } else {
-                throw Exception("Failed to fetch new releases: ${response.code()}")
-            }
-        }
-    }
-
-    private fun updateRecyclerView(albums: List<SpotifyAlbum>, recyclerView: RecyclerView) {
-        context?.let {
-            recyclerView.layoutManager =
-                LinearLayoutManager(it, LinearLayoutManager.HORIZONTAL, false)
-            recyclerView.adapter = AlbumAdapter(albums)
         }
     }
 }
