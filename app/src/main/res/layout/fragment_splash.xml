@@ -23,7 +23,7 @@
         android:id="@+id/appName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="RateTunes"
+        android:text="Rateify"
         android:textColor="@color/white"
         android:textStyle="italic"
         android:gravity="center_horizontal"
