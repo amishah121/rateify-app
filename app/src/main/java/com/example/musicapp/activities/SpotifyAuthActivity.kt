@@ -2,6 +2,7 @@ package com.example.musicapp.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
@@ -11,13 +12,10 @@ class SpotifyAuthActivity : AppCompatActivity() {
 
     private val CLIENT_ID = "84544f3e69f746c793a2db1f47ecae57"
     private val REDIRECT_URI = "rateify://callback"
-
     private val REQUEST_CODE = 1337
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Always initiate a new authorization request
         initiateAuthorization()
     }
 
@@ -33,26 +31,32 @@ class SpotifyAuthActivity : AppCompatActivity() {
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE) {
-            val response = AuthorizationClient.getResponse(resultCode, intent)
+            val response = AuthorizationClient.getResponse(resultCode, data)
+            Log.d("SpotifyAuthActivity", "Received response type: ${response.type}")
 
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     val accessToken = response.accessToken
+                    Log.d("SpotifyAuthActivity", "Access token received: $accessToken")
 
-                    val callingIntent = Intent()
-                    callingIntent.putExtra("ACCESS_TOKEN", accessToken)
+                    // Pass the access token back to the calling activity
+                    val callingIntent = Intent().apply {
+                        putExtra("ACCESS_TOKEN", accessToken)
+                    }
                     setResult(RESULT_OK, callingIntent)
                     finish()
                 }
                 AuthorizationResponse.Type.ERROR -> {
+                    Log.e("SpotifyAuthActivity", "Error response: ${response.error}")
                     setResult(RESULT_CANCELED)
                     finish()
                 }
                 else -> {
+                    Log.e("SpotifyAuthActivity", "Unhandled response type: ${response.type}")
                     setResult(RESULT_CANCELED)
                     finish()
                 }

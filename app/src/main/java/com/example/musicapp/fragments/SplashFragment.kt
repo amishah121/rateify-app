@@ -56,8 +56,14 @@ class SplashFragment : Fragment() {
             val accessToken = data?.getStringExtra("ACCESS_TOKEN")
 
             if (!accessToken.isNullOrEmpty()) {
+                // Navigate to HomeFragment or perform necessary actions with accessToken
                 navController.navigate(R.id.homeFragment)
+            } else {
+                // Handle case where accessToken is null or empty
+                // For example, show an error message or retry authentication
             }
+        } else {
+            // Handle other result codes if needed
         }
     }
 }
