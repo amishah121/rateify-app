@@ -12,18 +12,22 @@
 
     <TextView
         android:id="@+id/albumTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Album Title"
         android:textStyle="bold"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="sans-serif"
+        android:maxLines="3"
+        android:ellipsize="end" />
 
     <TextView
         android:id="@+id/albumArtist"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Artist Name"
         android:textColor="@android:color/darker_gray"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="sans-serif"
+        android:maxLines="3"
+        android:ellipsize="end" />
 </LinearLayout>

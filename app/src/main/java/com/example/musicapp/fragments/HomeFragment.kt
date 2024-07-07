@@ -30,7 +30,6 @@ class HomeFragment : Fragment() {
     private val apiService = ApiClient.spotifyService
     private var accessToken: String? = null
 
-    // Activity result launcher for starting Spotify authentication activity
     private val startSpotifyAuthActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -58,12 +57,10 @@ class HomeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        // Initialize RecyclerViews
         newReleasesRecyclerView = view.findViewById(R.id.newReleasesRecyclerView)
         popularRightNowRecyclerView = view.findViewById(R.id.popularRightNowRecyclerView)
         recommendedForYouRecyclerView = view.findViewById(R.id.recommendedForYouRecyclerView)
 
-        // Start Spotify authentication flow if access token is not available
         if (accessToken == null) {
             startSpotifyAuthentication()
         }
@@ -83,14 +80,11 @@ class HomeFragment : Fragment() {
             // Launch coroutine in the main dispatcher
             GlobalScope.launch(Dispatchers.Main) {
                 try {
-                    // Fetch new releases
                     val newReleases = fetchNewReleases(token)
 
-                    // Update RecyclerView with fetched albums
                     updateRecyclerView(newReleases, newReleasesRecyclerView)
 
                 } catch (e: Exception) {
-                    // Handle errors
                     e.printStackTrace()
                     Log.e("HomeFragment", "Failed to fetch albums: ${e.message}")
                 }
