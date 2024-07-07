@@ -8,6 +8,6 @@ interface SpotifyService {
     @GET("v1/browse/new-releases")
     suspend fun getNewReleases(
         @Header("Authorization") token: String,
-        @Query("limit") limit: Int = 10
+        @Query("limit") limit: Int = 30
     ): Response<SpotifyAlbumsResponse>
 }
