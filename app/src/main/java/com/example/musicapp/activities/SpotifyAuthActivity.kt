@@ -24,7 +24,7 @@ class SpotifyAuthActivity : AppCompatActivity() {
             CLIENT_ID,
             AuthorizationResponse.Type.TOKEN,
             REDIRECT_URI
-        ).setScopes(arrayOf("user-read-private", "playlist-read"))
+        ).setScopes(arrayOf("user-read-private", "user-top-read", "playlist-read"))
             .build()
 
         AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request)

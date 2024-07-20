@@ -16,6 +16,7 @@ import com.example.musicapp.activities.SpotifyAuthActivity
 import com.example.musicapp.adapters.AlbumAdapter
 import com.example.musicapp.api.ApiClient
 import com.example.musicapp.model.SpotifyAlbum
+import com.example.musicapp.model.SpotifyArtist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,8 +25,8 @@ import kotlinx.coroutines.withContext
 class HomeFragment : Fragment() {
 
     private lateinit var newReleasesRecyclerView: RecyclerView
-    private lateinit var popularRightNowRecyclerView: RecyclerView
-    private lateinit var recommendedForYouRecyclerView: RecyclerView
+    private lateinit var popAlbumsRecyclerView: RecyclerView
+    private lateinit var countryAlbumsRecyclerView: RecyclerView
 
     private val apiService = ApiClient.spotifyService
     private var accessToken: String? = null
@@ -58,8 +59,8 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         newReleasesRecyclerView = view.findViewById(R.id.newReleasesRecyclerView)
-        popularRightNowRecyclerView = view.findViewById(R.id.popularRightNowRecyclerView)
-        recommendedForYouRecyclerView = view.findViewById(R.id.recommendedForYouRecyclerView)
+        popAlbumsRecyclerView = view.findViewById(R.id.popAlbumsRecyclerView)
+        countryAlbumsRecyclerView = view.findViewById(R.id.countryAlbumsRecyclerView)
 
         if (accessToken == null) {
             startSpotifyAuthentication()
@@ -81,13 +82,72 @@ class HomeFragment : Fragment() {
 
                 if (response.isSuccessful) {
                     val albumsResponse = response.body()
-                    albumsResponse?.albums?.items ?: emptyList()
+                    val albums = albumsResponse?.albums?.items ?: emptyList()
+                    val filteredAlbums = filterTracks(albums)
+                    filteredAlbums
                 } else {
                     throw Exception("Failed to fetch new releases: ${response.code()}")
                 }
             } catch (e: Exception) {
                 throw Exception("Failed to fetch new releases: ${e.message}")
             }
+        }
+    }
+
+    private suspend fun fetchGenreAlbums(accessToken: String, genre: String): List<SpotifyAlbum> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.getRecommendations("Bearer $accessToken", genre)
+
+                if (response.isSuccessful) {
+                    val recommendationsResponse = response.body()
+                    val albums = recommendationsResponse?.tracks?.map { it.album }?.distinct() ?: emptyList()
+                    val filteredAlbums = filterTracks(albums)
+                    filteredAlbums
+                } else {
+                    throw Exception("Failed to fetch $genre albums: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                throw Exception("Failed to fetch $genre albums: ${e.message}")
+            }
+        }
+    }
+
+    private suspend fun filterTracks(albums: List<SpotifyAlbum>): List<SpotifyAlbum> {
+        val filteredAlbums = albums.mapNotNull { album ->
+            val albumResponse = apiService.getAlbumDetails("Bearer $accessToken", album.id)
+            if (albumResponse.isSuccessful) {
+                val detailedAlbum = albumResponse.body()
+                detailedAlbum?.takeIf { it.total_tracks > 1 }
+            } else {
+                null
+            }
+        }
+        return filteredAlbums
+    }
+
+
+    private fun fetchAlbums() {
+        accessToken?.let { token ->
+            // Launch coroutine in the main dispatcher
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    val newReleases = fetchNewReleases(token)
+                    updateRecyclerView(newReleases, newReleasesRecyclerView)
+
+                    val popAlbums = fetchGenreAlbums(token, "pop")
+                    updateRecyclerView(popAlbums, popAlbumsRecyclerView)
+
+                    val countryAlbums = fetchGenreAlbums(token, "country")
+                    updateRecyclerView(countryAlbums, countryAlbumsRecyclerView)
+                    // Fetch and update recommended albums similarly if needed
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("HomeFragment", "Failed to fetch albums: ${e.message}")
+                }
+            }
+        } ?: run {
+            Log.e("HomeFragment", "Access token is null, cannot fetch albums.")
         }
     }
 
@@ -99,26 +159,6 @@ class HomeFragment : Fragment() {
             recyclerView.adapter = AlbumAdapter(albums)
         } else {
             Log.e("HomeFragment", "Context is null or albums list is empty.")
-        }
-    }
-
-    private fun fetchAlbums() {
-        accessToken?.let { token ->
-            Log.d("HomeFragment", "Fetching albums with token: $token")
-            // Launch coroutine in the main dispatcher
-            GlobalScope.launch(Dispatchers.Main) {
-                try {
-                    val newReleases = fetchNewReleases(token)
-                    updateRecyclerView(newReleases, newReleasesRecyclerView)
-
-                    // Fetch and update recommended albums similarly if needed
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("HomeFragment", "Failed to fetch albums: ${e.message}")
-                }
-            }
-        } ?: run {
-            Log.e("HomeFragment", "Access token is null, cannot fetch albums.")
         }
     }
 }
