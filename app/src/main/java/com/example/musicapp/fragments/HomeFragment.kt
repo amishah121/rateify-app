@@ -3,6 +3,8 @@ package com.example.musicapp.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +41,19 @@ class HomeFragment : Fragment() {
 
     private val apiService = ApiClient.spotifyService
     private var accessToken: String? = null
+
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private val autoScrollRunnable = object : Runnable {
+        override fun run() {
+            val currentItem = viewPager.currentItem
+            val nextItem = (currentItem + 1) % (viewPager.adapter?.count ?: 1)
+            viewPager.setCurrentItem(nextItem, true)
+            autoScrollHandler.postDelayed(this, SCROLL_DELAY)
+        }
+    }
+
+    private val SCROLL_DELAY = 3000L // 3 seconds
+
 
     private val startSpotifyAuthActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -213,8 +228,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupViewPagerWithSlides(albums: List<SpotifyAlbum>) {
-        val albumImages = albums.mapNotNull { it.images?.firstOrNull()?.url } // Extract image URLs
+        val albumImages = albums.mapNotNull { it.images.firstOrNull()?.url } // Extract image URLs
         val slidesAdapter = SlidesAdapter(albumImages)
         viewPager.adapter = slidesAdapter
+        autoScrollHandler.postDelayed(autoScrollRunnable, SCROLL_DELAY)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        autoScrollHandler.removeCallbacks(autoScrollRunnable)
     }
 }
