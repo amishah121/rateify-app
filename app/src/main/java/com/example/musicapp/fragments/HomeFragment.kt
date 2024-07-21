@@ -11,12 +11,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.musicapp.R
 import com.example.musicapp.activities.SpotifyAuthActivity
 import com.example.musicapp.adapters.AlbumAdapter
+import com.example.musicapp.adapters.SlidesAdapter
 import com.example.musicapp.api.ApiClient
 import com.example.musicapp.model.SpotifyAlbum
-import com.example.musicapp.model.SpotifyArtist
+import com.example.musicapp.model.SpotifyImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,6 +29,13 @@ class HomeFragment : Fragment() {
     private lateinit var newReleasesRecyclerView: RecyclerView
     private lateinit var popAlbumsRecyclerView: RecyclerView
     private lateinit var countryAlbumsRecyclerView: RecyclerView
+    private lateinit var hipHopAlbumsRecyclerView: RecyclerView
+    private lateinit var rockAlbumsRecyclerView: RecyclerView
+    private lateinit var electronicAlbumsRecyclerView: RecyclerView
+    private lateinit var rnbAlbumsRecyclerView: RecyclerView
+    private lateinit var indieAlbumsRecyclerView: RecyclerView
+    private lateinit var jazzAlbumsRecyclerView: RecyclerView
+    private lateinit var viewPager: ViewPager
 
     private val apiService = ApiClient.spotifyService
     private var accessToken: String? = null
@@ -61,6 +70,13 @@ class HomeFragment : Fragment() {
         newReleasesRecyclerView = view.findViewById(R.id.newReleasesRecyclerView)
         popAlbumsRecyclerView = view.findViewById(R.id.popAlbumsRecyclerView)
         countryAlbumsRecyclerView = view.findViewById(R.id.countryAlbumsRecyclerView)
+        hipHopAlbumsRecyclerView = view.findViewById(R.id.hipHopAlbumsRecyclerView)
+        rockAlbumsRecyclerView = view.findViewById(R.id.rockAlbumsRecyclerView)
+        electronicAlbumsRecyclerView = view.findViewById(R.id.electronicAlbumsRecyclerView)
+        rnbAlbumsRecyclerView = view.findViewById(R.id.rnbAlbumsRecyclerView)
+        indieAlbumsRecyclerView = view.findViewById(R.id.indieAlbumsRecyclerView)
+        jazzAlbumsRecyclerView = view.findViewById(R.id.jazzAlbumsRecyclerView)
+        viewPager = view.findViewById(R.id.imageSlider)
 
         if (accessToken == null) {
             startSpotifyAuthentication()
@@ -113,15 +129,28 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private suspend fun filterTracks(albums: List<SpotifyAlbum>): List<SpotifyAlbum> {
-        val filteredAlbums = albums.mapNotNull { album ->
-            val albumResponse = apiService.getAlbumDetails("Bearer $accessToken", album.id)
-            if (albumResponse.isSuccessful) {
-                val detailedAlbum = albumResponse.body()
-                detailedAlbum?.takeIf { it.total_tracks > 1 }
-            } else {
-                null
+    private suspend fun fetchSlides(accessToken: String): List<SpotifyAlbum> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.getSlides("Bearer $accessToken")
+
+                if (response.isSuccessful) {
+                    val recommendationsResponse = response.body()
+                    val albums = recommendationsResponse?.tracks?.map { it.album }?.distinct() ?: emptyList()
+                    val filteredAlbums = filterTracks(albums)
+                    filteredAlbums
+                } else {
+                    throw Exception("Failed to fetch slides: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                throw Exception("Failed to fetch slides: ${e.message}")
             }
+        }
+    }
+
+    private fun filterTracks(albums: List<SpotifyAlbum>): List<SpotifyAlbum> {
+        val filteredAlbums = albums.mapNotNull { album ->
+            album.takeIf { it.total_tracks > 1 }
         }
         return filteredAlbums
     }
@@ -132,6 +161,9 @@ class HomeFragment : Fragment() {
             // Launch coroutine in the main dispatcher
             GlobalScope.launch(Dispatchers.Main) {
                 try {
+                    val slidesAlbums = fetchSlides(token)
+                    setupViewPagerWithSlides(slidesAlbums)
+
                     val newReleases = fetchNewReleases(token)
                     updateRecyclerView(newReleases, newReleasesRecyclerView)
 
@@ -140,6 +172,24 @@ class HomeFragment : Fragment() {
 
                     val countryAlbums = fetchGenreAlbums(token, "country")
                     updateRecyclerView(countryAlbums, countryAlbumsRecyclerView)
+
+                    val hipHopAlbums = fetchGenreAlbums(token, "hip-hop")
+                    updateRecyclerView(hipHopAlbums, hipHopAlbumsRecyclerView)
+
+                    val rockAlbums = fetchGenreAlbums(token, "rock")
+                    updateRecyclerView(rockAlbums, rockAlbumsRecyclerView)
+
+                    val electronicAlbums = fetchGenreAlbums(token, "electronic")
+                    updateRecyclerView(electronicAlbums, electronicAlbumsRecyclerView)
+
+                    val rnbAlbums = fetchGenreAlbums(token, "soul")
+                    updateRecyclerView(rnbAlbums, rnbAlbumsRecyclerView)
+
+                    val indieAlbums = fetchGenreAlbums(token, "indie")
+                    updateRecyclerView(indieAlbums, indieAlbumsRecyclerView)
+
+                    val jazzAlbums = fetchGenreAlbums(token, "jazz")
+                    updateRecyclerView(jazzAlbums, jazzAlbumsRecyclerView)
                     // Fetch and update recommended albums similarly if needed
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -160,5 +210,11 @@ class HomeFragment : Fragment() {
         } else {
             Log.e("HomeFragment", "Context is null or albums list is empty.")
         }
+    }
+
+    private fun setupViewPagerWithSlides(albums: List<SpotifyAlbum>) {
+        val albumImages = albums.mapNotNull { it.images?.firstOrNull()?.url } // Extract image URLs
+        val slidesAdapter = SlidesAdapter(albumImages)
+        viewPager.adapter = slidesAdapter
     }
 }

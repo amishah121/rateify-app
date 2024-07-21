@@ -22,6 +22,14 @@ interface SpotifyService {
         @Query("limit") limit: Int = 50
     ): Response<SpotifyRecommendationsResponse>
 
+    @GET("v1/recommendations")
+    suspend fun getSlides(
+        @Header("Authorization") token: String,
+        @Query("seed_genres") genres: String = "pop, hip-hop, country, rock, indie",
+        @Query("target_popularity") popularity: Int = 90,
+        @Query("limit") limit: Int = 50
+    ): Response<SpotifyRecommendationsResponse>
+
     @GET("v1/albums/{id}")
     suspend fun getAlbumDetails(
         @Header("Authorization") token: String,
