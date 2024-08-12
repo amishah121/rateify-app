@@ -2,6 +2,9 @@ package com.example.musicapp.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,7 +12,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SearchView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -81,6 +89,14 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        val searchEditText = searchView.findViewById<View>(androidx.appcompat.R.id.search_src_text) as EditText
+        searchEditText.setTextColor(Color.WHITE)
+        val iconClose = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+        iconClose.setColorFilter(Color.WHITE)
+        val iconSearch = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_button)
+        iconSearch.setColorFilter(Color.WHITE)
 
         newReleasesRecyclerView = view.findViewById(R.id.newReleasesRecyclerView)
         popAlbumsRecyclerView = view.findViewById(R.id.popAlbumsRecyclerView)
