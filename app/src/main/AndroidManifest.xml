@@ -35,5 +35,8 @@
                 <data android:scheme="rateify" android:host="callback" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.SearchResultsActivity"
+            android:exported="true" />
     </application>
 </manifest>

@@ -40,7 +40,6 @@ interface SpotifyService {
     suspend fun search(
         @Header("Authorization") authorization: String,
         @Query("q") query: String,
-        @Query("type") type: String,
-        @Query("market") market: String
+        @Query("type") type: String = "album",
     ): Response<SpotifyAlbumsResponse>
 }

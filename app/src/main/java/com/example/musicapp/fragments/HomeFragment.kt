@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.musicapp.R
+import com.example.musicapp.activities.SearchResultsActivity
 import com.example.musicapp.activities.SpotifyAuthActivity
 import com.example.musicapp.adapters.AlbumAdapter
 import com.example.musicapp.adapters.SlidesAdapter
@@ -98,6 +99,21 @@ class HomeFragment : Fragment() {
         val iconSearch = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_button)
         iconSearch.setColorFilter(Color.WHITE)
 
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    // Perform the search
+                    performSearch(it)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Optionally, you can perform a live search here
+                return false
+            }
+        })
+
         newReleasesRecyclerView = view.findViewById(R.id.newReleasesRecyclerView)
         popAlbumsRecyclerView = view.findViewById(R.id.popAlbumsRecyclerView)
         countryAlbumsRecyclerView = view.findViewById(R.id.countryAlbumsRecyclerView)
@@ -114,6 +130,14 @@ class HomeFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun performSearch(query: String) {
+        val intent = Intent(requireContext(), SearchResultsActivity::class.java).apply {
+            putExtra("QUERY", query)
+            putExtra("ACCESS_TOKEN", accessToken) // Add the access token
+        }
+        startActivity(intent)
     }
 
     private fun startSpotifyAuthentication() {
