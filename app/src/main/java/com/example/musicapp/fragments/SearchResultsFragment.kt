@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.adapters.AlbumAdapter
 import com.example.musicapp.api.ApiClient
-import com.example.musicapp.model.SpotifyAlbum
+import com.example.musicapp.model.Album
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 class SearchResultsFragment : Fragment() {
 
     private lateinit var searchResultsRecyclerView: RecyclerView
-    private val apiService = ApiClient.spotifyService
+    private val apiService = ApiClient.lastFmService
     private var accessToken: String? = null
 
     override fun onCreateView(
@@ -77,12 +77,12 @@ class SearchResultsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    apiService.search("Bearer $accessToken", query, "album")
+                    apiService.searchAlbums("Bearer $accessToken", query)
                 }
 
                 if (response.isSuccessful) {
                     val albumsResponse = response.body()
-                    val albums = albumsResponse?.albums?.items ?: emptyList()
+                    val albums = albumsResponse?.albums?.album ?: emptyList()
                     updateRecyclerView(albums)
                     Log.d("SearchResultsFragment", "Albums: $albums")
                 } else {
@@ -94,7 +94,7 @@ class SearchResultsFragment : Fragment() {
         }
     }
 
-    private fun updateRecyclerView(albums: List<SpotifyAlbum>) {
+    private fun updateRecyclerView(albums: List<Album>) {
         if (context != null) {
             searchResultsRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext())

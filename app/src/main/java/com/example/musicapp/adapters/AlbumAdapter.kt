@@ -7,9 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
-import com.example.musicapp.model.SpotifyAlbum
+import com.example.musicapp.model.Album
+import com.example.musicapp.model.getExtralargeImageUrl
 
-class AlbumAdapter(private val albums: List<SpotifyAlbum>) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
+class AlbumAdapter(private val albums: List<Album>) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_album, parent, false)
@@ -26,13 +27,14 @@ class AlbumAdapter(private val albums: List<SpotifyAlbum>) : RecyclerView.Adapte
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(album: SpotifyAlbum) {
+        fun bind(album: Album) {
             // Bind album data to views in ViewHolder
             itemView.findViewById<TextView>(R.id.albumTitle).text = album.name
-            itemView.findViewById<TextView>(R.id.albumArtist).text = album.artists.joinToString { it.name }
+            itemView.findViewById<TextView>(R.id.albumArtist).text = album.artist.name
             // Load album cover image using Glide or another image loading library
+            val imageUrl = album.getExtralargeImageUrl()
             Glide.with(itemView)
-                .load(album.images.firstOrNull()?.url)
+                .load(imageUrl)
                 //.placeholder(R.drawable.placeholder_image) // Placeholder image while loading
                 //.error(R.drawable.error_image) // Error image if loading fails
                 .into(itemView.findViewById(R.id.albumImageView))
