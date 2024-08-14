@@ -19,6 +19,16 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.musicapp.fragments.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="Home">
+        <action
+            android:id="@+id/action_home_to_search"
+            app:destination="@id/searchResultsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchResultsFragment"
+        android:name="com.example.musicapp.fragments.SearchResultsFragment"
+        android:label="Search Results"/>
+        <action
+            android:id="@+id/action_searc_to_home"
+            app:destination="@id/homeFragment" />
 </navigation>

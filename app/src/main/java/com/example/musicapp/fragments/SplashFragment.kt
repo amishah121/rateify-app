@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -19,7 +20,19 @@ class SplashFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var navController: NavController
 
-    private val SPOTIFY_AUTH_REQUEST_CODE = 1337
+    private val spotifyAuthLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val accessToken = result.data?.getStringExtra("ACCESS_TOKEN")
+            if (!accessToken.isNullOrEmpty()) {
+                // Navigate to HomeFragment or perform necessary actions with accessToken
+                navController.navigate(R.id.homeFragment)
+            } else {
+                // Handle case where accessToken is null or empty
+            }
+        } else {
+            // Handle other result codes if needed
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +45,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         init(view)
 
-        val handler = Handler(Looper.myLooper()!!)
-        handler.postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             startSpotifyAuthActivity()
         }, 2000)
     }
@@ -45,25 +57,7 @@ class SplashFragment : Fragment() {
 
     private fun startSpotifyAuthActivity() {
         val intent = Intent(requireContext(), SpotifyAuthActivity::class.java)
-        startActivityForResult(intent, SPOTIFY_AUTH_REQUEST_CODE)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == SPOTIFY_AUTH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val accessToken = data?.getStringExtra("ACCESS_TOKEN")
-
-            if (!accessToken.isNullOrEmpty()) {
-                // Navigate to HomeFragment or perform necessary actions with accessToken
-                navController.navigate(R.id.homeFragment)
-            } else {
-                // Handle case where accessToken is null or empty
-                // For example, show an error message or retry authentication
-            }
-        } else {
-            // Handle other result codes if needed
-        }
+        spotifyAuthLauncher.launch(intent)
     }
 }
+

@@ -1,10 +1,14 @@
 package com.example.musicapp.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +33,29 @@ class SearchResultsFragment : Fragment() {
     ): View? {
         Log.d("SearchResultsFragment", "onCreateView called")
         val view = inflater.inflate(R.layout.fragment_search_results, container, false)
+
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        val searchEditText = searchView.findViewById<View>(androidx.appcompat.R.id.search_src_text) as EditText
+        searchEditText.setTextColor(Color.WHITE)
+        val iconClose = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+        iconClose.setColorFilter(Color.WHITE)
+        val iconSearch = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_button)
+        iconSearch.setColorFilter(Color.WHITE)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    // Perform the search
+                    accessToken?.let { it1 -> performSearch(it, it1) }
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Optionally, you can perform a live search here
+                return false
+            }
+        })
 
         searchResultsRecyclerView = view.findViewById(R.id.searchResultsRecyclerView)
 

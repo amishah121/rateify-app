@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import com.spotify.sdk.android.auth.LoginActivity.REQUEST_CODE
 
 class SpotifyAuthActivity : AppCompatActivity() {
 
     private val CLIENT_ID = "84544f3e69f746c793a2db1f47ecae57"
     private val REDIRECT_URI = "rateify://callback"
-    private val REQUEST_CODE = 1337
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class SpotifyAuthActivity : AppCompatActivity() {
                     val accessToken = response.accessToken
                     Log.d("SpotifyAuthActivity", "Access token received: $accessToken")
 
-                    // Pass the access token back to the calling activity
+                    // Pass the access token back to the calling fragment/activity
                     val callingIntent = Intent().apply {
                         putExtra("ACCESS_TOKEN", accessToken)
                     }
