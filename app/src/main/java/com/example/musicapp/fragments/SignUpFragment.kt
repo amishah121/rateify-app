@@ -1,5 +1,6 @@
 package com.example.musicapp.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.musicapp.R
+import com.example.musicapp.activities.MainActivity
+import com.example.musicapp.activities.StartActivity
 import com.example.musicapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -49,8 +52,11 @@ class SignUpFragment : Fragment() {
 
     private fun registerUser(email: String, pass: String) {
         mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
-            if (it.isSuccessful)
-                navController.navigate(R.id.action_signUpFragment_to_homeFragment)
+            if (it.isSuccessful) {
+                val intent = Intent(activity, MainActivity::class.java)
+                startActivity(intent)
+                activity?.finish()
+            }
             else
                 Toast.makeText(context, it.exception.toString(), Toast.LENGTH_SHORT).show()
         }
