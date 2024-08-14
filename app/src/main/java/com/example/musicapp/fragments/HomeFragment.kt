@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.lifecycle.lifecycleScope
+import com.example.musicapp.model.getExtralargeImageUrl
 
 class HomeFragment : Fragment() {
 
@@ -92,18 +93,15 @@ class HomeFragment : Fragment() {
         }
     }
 
-//    private fun filterAlbums(albums: List<Album>): List<Album> {
-//        //return albums.filter { it.total_tracks > 1 }
-//    }
-
     private fun fetchAlbums() {
         lifecycleScope.launch {
             try {
-                Log.d("HomeFragment", "fetching pop albums")
+                val slidesAlbums = fetchTopAlbumsByTag("disco")
+                setupViewPagerWithSlides(slidesAlbums)
+
                 val popAlbums = fetchTopAlbumsByTag("pop")
                 updateRecyclerView(popAlbums, popAlbumsRecyclerView)
 
-                Log.d("HomeFragment", "fetching country albums")
                 val countryAlbums = fetchTopAlbumsByTag("country")
                 updateRecyclerView(countryAlbums, countryAlbumsRecyclerView)
 
@@ -144,7 +142,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupViewPagerWithSlides(albums: List<Album>) {
-        val albumImages = albums.mapNotNull { it.image.firstOrNull()?.url } // Extract image URLs
+        val albumImages = albums.mapNotNull { it.getExtralargeImageUrl() }
         val slidesAdapter = SlidesAdapter(albumImages)
         viewPager.adapter = slidesAdapter
         autoScrollHandler.postDelayed(autoScrollRunnable, SCROLL_DELAY)

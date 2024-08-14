@@ -13,13 +13,11 @@ class SearchResultsActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val query = intent.getStringExtra("QUERY")
-            val accessToken = intent.getStringExtra("ACCESS_TOKEN") // Retrieve the access token
 
-            if (query != null && accessToken != null) {
+            if (query != null) {
                 val fragment = SearchResultsFragment().apply {
                     arguments = Bundle().apply {
                         putString("QUERY", query)
-                        putString("ACCESS_TOKEN", accessToken) // Pass the access token to the fragment
                     }
                 }
                 supportFragmentManager.beginTransaction()

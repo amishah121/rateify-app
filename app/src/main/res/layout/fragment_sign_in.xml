@@ -93,6 +93,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-black"
         android:text="Not Registered Yet?"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:paddingStart="12dp"
         app:layout_constraintStart_toStartOf="@id/cardView2"

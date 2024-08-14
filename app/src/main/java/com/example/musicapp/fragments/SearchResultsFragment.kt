@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.adapters.AlbumAdapter
+import com.example.musicapp.adapters.SearchAdapter
 import com.example.musicapp.api.ApiClient
 import com.example.musicapp.model.Album
+import com.example.musicapp.model.SearchAlbum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,7 +27,7 @@ class SearchResultsFragment : Fragment() {
 
     private lateinit var searchResultsRecyclerView: RecyclerView
     private val apiService = ApiClient.lastFmService
-    private var accessToken: String? = null
+    private val apiKey = "b6cb1c31d9407ec47411521bfb4d08ed"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +48,7 @@ class SearchResultsFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     // Perform the search
-                    accessToken?.let { it1 -> performSearch(it, it1) }
+                    performSearch(it)
                 }
                 return true
             }
@@ -60,29 +62,28 @@ class SearchResultsFragment : Fragment() {
         searchResultsRecyclerView = view.findViewById(R.id.searchResultsRecyclerView)
 
         // Retrieve the access token from the fragment arguments
-        accessToken = arguments?.getString("ACCESS_TOKEN")
         val query = arguments?.getString("QUERY")
 
-        if (query != null && accessToken != null) {
-            performSearch(query, accessToken!!)
+        if (query != null) {
+            performSearch(query)
         } else {
             Log.e("SearchResultsFragment", "Query or access token is missing.")
         }
-
         return view
     }
 
-    private fun performSearch(query: String, accessToken: String) {
+    private fun performSearch(query: String) {
         Log.d("SearchResultsFragment", "Performing Search")
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    apiService.searchAlbums("Bearer $accessToken", query)
+                    apiService.searchAlbums(query, apiKey)
                 }
 
                 if (response.isSuccessful) {
-                    val albumsResponse = response.body()
-                    val albums = albumsResponse?.albums?.album ?: emptyList()
+                    Log.d("SearchResultsFragment", "Response Body: ${response.body()}")
+                    val searchResponse = response.body()
+                    val albums = searchResponse?.results?.albumMatches?.albumList ?: emptyList()
                     updateRecyclerView(albums)
                     Log.d("SearchResultsFragment", "Albums: $albums")
                 } else {
@@ -94,11 +95,11 @@ class SearchResultsFragment : Fragment() {
         }
     }
 
-    private fun updateRecyclerView(albums: List<Album>) {
+    private fun updateRecyclerView(albums: List<SearchAlbum>) {
         if (context != null) {
             searchResultsRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext())
-            searchResultsRecyclerView.adapter = AlbumAdapter(albums)
+            searchResultsRecyclerView.adapter = SearchAdapter(albums)
         } else {
             Log.e("SearchResultsFragment", "Context is null, cannot update RecyclerView.")
         }

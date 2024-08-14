@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
+import com.example.musicapp.model.getExtralargeImageUrl
 
 class SlidesAdapter(private val albumImages: List<String>) : PagerAdapter() {
 

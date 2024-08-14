@@ -14,9 +14,7 @@ data class Album(
     val name: String,
     val artist: Artist, // Changed from String to Artist object
     val image: List<Image>,
-    val url: String,
-    val playcount: String,
-    val listeners: String
+    val url: String
 )
 
 data class Artist(
