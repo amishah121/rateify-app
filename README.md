@@ -30,4 +30,9 @@ Inside the local.properties file add the following line:
 Now you should be able to run the project in Android Studio on an emulator or a physical device.
 
 ### Screenshots
-[alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124840.png "Logo Title Text 1")
+![Alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124840.png?raw=true)
+![Alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124046.png?raw=true)
+![Alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124147.png?raw=true)
+![Alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124308.png?raw=true)
+![Alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124448.png?raw=true)
+![Alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124709.png?raw=true)
