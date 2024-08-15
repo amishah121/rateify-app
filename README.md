@@ -24,7 +24,7 @@ The app is currently under development and bugs and issues may be present.
 
 ### Installation
 To install the app, first clone the repository and open the project in Android Studio. <br /> 
-Then, follow the instructions here to generate an API Key: https://www.last.fm/api/account/create. <br /> 
+Then, follow the instructions here to generate a Last.fm API Key: https://www.last.fm/api/account/create. <br /> 
 Inside the local.properties file at the root add the following line:
 `LASTFM_API_KEY=<your_api_key_here>` <br /> 
 Now you should be able to run the project in Android Studio on an emulator or a physical device.
