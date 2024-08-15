@@ -26,13 +26,36 @@ class TrackAdapter(private val tracks: List<Track>) : RecyclerView.Adapter<Track
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(track: Track) {
-            val trackNameTextView = itemView.findViewById<TextView>(R.id.trackTitleTextView)
-            val thumbsUpButton = itemView.findViewById<ImageView>(R.id.thumbsUpImageView)
-            val thumbsDownButton = itemView.findViewById<ImageView>(R.id.thumbsDownImageView)
+        private val trackNameTextView: TextView = itemView.findViewById(R.id.trackTitleTextView)
+        private val thumbsUpButton: ImageView = itemView.findViewById(R.id.thumbsUpImageView)
+        private val thumbsDownButton: ImageView = itemView.findViewById(R.id.thumbsDownImageView)
 
+        private var isThumbsUp = false
+
+        init {
+            thumbsUpButton.setOnClickListener {
+                toggleThumbs(true)
+            }
+            thumbsDownButton.setOnClickListener {
+                toggleThumbs(false)
+            }
+        }
+
+        fun bind(track: Track) {
             trackNameTextView.text = track.name
-            // Set up thumbs up/down click listeners if needed
+            // Optionally set initial state if required
+        }
+
+        private fun toggleThumbs(isUp: Boolean) {
+            if (isUp) {
+                thumbsUpButton.setImageResource(R.drawable.ic_thumbs_up_selected)
+                thumbsDownButton.setImageResource(R.drawable.ic_thumbs_down)
+                isThumbsUp = true
+            } else {
+                thumbsUpButton.setImageResource(R.drawable.ic_thumbs_up)
+                thumbsDownButton.setImageResource(R.drawable.ic_thumbs_down_selected)
+                isThumbsUp = false
+            }
         }
     }
 }
