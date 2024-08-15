@@ -100,8 +100,9 @@ class HomeFragment : Fragment() {
     private fun fetchAlbums() {
         lifecycleScope.launch {
             try {
-                val slidesAlbums = fetchTopAlbumsByTag("urban")
-                setupViewPagerWithSlides(slidesAlbums)
+                val slidesAlbums = fetchTopAlbumsByTag("pop")
+                val shuffledAlbums = slidesAlbums.shuffled()
+                setupViewPagerWithSlides(shuffledAlbums)
 
                 val popAlbums = fetchTopAlbumsByTag("pop")
                 updateRecyclerView(popAlbums, popAlbumsRecyclerView)
