@@ -1,6 +1,5 @@
 package com.example.musicapp.fragments
 
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
-import com.example.musicapp.activities.AlbumDetailsActivity
 import com.example.musicapp.adapters.TrackAdapter
 import com.example.musicapp.api.ApiClient
 import com.example.musicapp.databinding.FragmentAlbumDetailsBinding
@@ -85,11 +83,9 @@ class AlbumDetailsFragment : Fragment() {
                     val tracks = albumInfo?.tracks?.track ?: emptyList()
                     updateTrackList(tracks)
                 } else {
-                    // Handle API response error
                     Log.e("AlbumDetailsFragment", "Failed to fetch album info: ${response.code()}")
                 }
             } catch (e: Exception) {
-                // Handle exceptions
                 Log.e("AlbumDetailsFragment", "Error fetching album info: ${e.message}")
             }
         }

@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.musicapp.R
 import com.example.musicapp.activities.MainActivity
-import com.example.musicapp.activities.StartActivity
 import com.example.musicapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 

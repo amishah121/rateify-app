@@ -88,7 +88,6 @@
             android:hint="Add your review..."
             android:layout_marginTop="16dp"/>
 
-        <!-- Tracklist with thumbs up/down -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trackListRecyclerView"
             android:layout_width="match_parent"

@@ -36,8 +36,6 @@ class SearchAdapter(
             val imageUrl = album.getExtralargeImageUrl()
             Glide.with(itemView)
                 .load(imageUrl)
-                //.placeholder(R.drawable.placeholder_image) // Optional
-                //.error(R.drawable.error_image) // Optional
                 .into(itemView.findViewById(R.id.albumImageView))
 
             // Set up the click listener for the album image

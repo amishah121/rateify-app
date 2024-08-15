@@ -21,9 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.musicapp.activities.AlbumDetailsActivity
-import com.example.musicapp.activities.MainActivity
 import com.example.musicapp.model.getExtralargeImageUrl
 
 class HomeFragment : Fragment() {
@@ -128,8 +126,6 @@ class HomeFragment : Fragment() {
                 val jazzAlbums = fetchTopAlbumsByTag("jazz")
                 updateRecyclerView(jazzAlbums, jazzAlbumsRecyclerView)
 
-                // Fetch and update recommended albums similarly if needed
-
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Failed to fetch albums: ${e.message}")
             }
@@ -148,7 +144,6 @@ class HomeFragment : Fragment() {
                     putString("albumName", album.name)
                     putString("albumCoverUrl", album.getExtralargeImageUrl())
                     putString("albumArtist", album.artist.name)
-                    // Add other album details as needed
                 }
 
                 // Navigate to AlbumDetailsFragment with the bundle
@@ -167,7 +162,6 @@ class HomeFragment : Fragment() {
     private fun setupViewPagerWithSlides(albums: List<Album>) {
         val albumImages = albums.mapNotNull { it.getExtralargeImageUrl() }
         val slidesAdapter = SlidesAdapter(albumImages) { position ->
-            // Handle image click here
             val album = albums[position] // Get the clicked album
 
             // Create an Intent to start the AlbumDetailsActivity
@@ -175,7 +169,6 @@ class HomeFragment : Fragment() {
                 putString("albumName", album.name)
                 putString("albumCoverUrl", album.getExtralargeImageUrl())
                 putString("albumArtist", album.artist.name)
-                // Add other album details as needed
             }
 
             // Navigate to AlbumDetailsFragment with the bundle

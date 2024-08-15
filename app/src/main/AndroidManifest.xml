@@ -14,8 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApp"
-        android:enableOnBackInvokedCallback="true"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true" >
 
         <activity
             android:name=".activities.MainActivity"

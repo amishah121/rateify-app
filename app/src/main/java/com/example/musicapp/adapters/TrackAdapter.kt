@@ -43,7 +43,6 @@ class TrackAdapter(private val tracks: List<Track>) : RecyclerView.Adapter<Track
 
         fun bind(track: Track) {
             trackNameTextView.text = track.name
-            // Optionally set initial state if required
         }
 
         private fun toggleThumbs(isUp: Boolean) {

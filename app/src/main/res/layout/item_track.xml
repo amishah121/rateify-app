@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <!-- Track Title -->
     <TextView
         android:id="@+id/trackTitleTextView"
         android:layout_width="0dp"
@@ -18,7 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Thumbs Up Button -->
     <ImageView
         android:id="@+id/thumbsUpImageView"
         android:layout_width="24dp"
@@ -29,7 +27,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Thumbs Down Button -->
     <ImageView
         android:id="@+id/thumbsDownImageView"
         android:layout_width="24dp"

@@ -39,12 +39,9 @@ class AlbumAdapter(
             albumTitle.text = album.name
             albumArtist.text = album.artist.name
 
-            // Load album cover image using Glide or another image loading library
             val imageUrl = album.getExtralargeImageUrl()
             Glide.with(itemView.context)
                 .load(imageUrl)
-                //.placeholder(R.drawable.placeholder_image) // Placeholder image while loading
-                //.error(R.drawable.error_image) // Error image if loading fails
                 .into(albumImageView)
 
             // Set click listener on album image

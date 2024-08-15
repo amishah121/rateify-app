@@ -24,8 +24,6 @@ class SearchResultsActivity : AppCompatActivity() {
                     .replace(R.id.fragment_container, fragment)
                     .commit()
             } else {
-                // Handle the case where query or accessToken is missing
-                // For example, show an error message or finish the activity
                 finish()
             }
         }

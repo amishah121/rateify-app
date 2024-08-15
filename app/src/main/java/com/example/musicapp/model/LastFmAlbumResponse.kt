@@ -7,18 +7,18 @@ data class AlbumsResponse(
 )
 
 data class Albums(
-    val album: List<Album> // Field name updated to match the API response
+    val album: List<Album>
 )
 
 data class Album(
     val name: String,
-    val artist: Artist, // Changed from String to Artist object
+    val artist: Artist,
     val image: List<Image>,
     val url: String
 )
 
 data class Artist(
-    val name: String // Adjust as needed based on actual JSON structure
+    val name: String
 )
 
 data class Image(

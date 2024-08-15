@@ -12,15 +12,12 @@ import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.activities.AlbumDetailsActivity
-import com.example.musicapp.adapters.AlbumAdapter
 import com.example.musicapp.adapters.SearchAdapter
 import com.example.musicapp.api.ApiClient
-import com.example.musicapp.model.Album
 import com.example.musicapp.model.SearchAlbum
 import com.example.musicapp.model.getExtralargeImageUrl
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +55,6 @@ class SearchResultsFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Optionally, you can perform a live search here
                 return false
             }
         })
@@ -109,7 +105,6 @@ class SearchResultsFragment : Fragment() {
                     putString("albumName", album.name)
                     putString("albumCoverUrl", album.getExtralargeImageUrl())
                     putString("albumArtist", album.artist)
-                    // Add other album details as needed
                 }
                 val intent = Intent(activity, AlbumDetailsActivity::class.java).apply {
                     putExtras(bundle)
