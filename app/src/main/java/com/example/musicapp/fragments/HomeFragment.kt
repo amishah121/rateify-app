@@ -1,5 +1,6 @@
 package com.example.musicapp.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +22,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.musicapp.activities.AlbumDetailsActivity
+import com.example.musicapp.activities.MainActivity
 import com.example.musicapp.model.getExtralargeImageUrl
 
 class HomeFragment : Fragment() {
@@ -148,8 +151,10 @@ class HomeFragment : Fragment() {
                 }
 
                 // Navigate to AlbumDetailsFragment with the bundle
-                val navController = findNavController()
-                navController.navigate(R.id.home_to_albumDetails, bundle)
+                val intent = Intent(activity, AlbumDetailsActivity::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(intent)
             }
         } else {
             Log.e("HomeFragment", "Context is null or albums list is empty.")

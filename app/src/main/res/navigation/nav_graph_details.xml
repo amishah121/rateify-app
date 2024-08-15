@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_details"
+    app:startDestination="@id/albumDetailsFragment">
+
+    <fragment
+        android:id="@+id/albumDetailsFragment"
+        android:name="com.example.musicapp.fragments.AlbumDetailsFragment"
+        android:label="Album Details">
+    </fragment>
+
+</navigation>

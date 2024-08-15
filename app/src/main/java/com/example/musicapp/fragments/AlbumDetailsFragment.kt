@@ -1,5 +1,6 @@
 package com.example.musicapp.fragments
 
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,14 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.musicapp.R
+import com.example.musicapp.activities.AlbumDetailsActivity
+import com.example.musicapp.adapters.TrackAdapter
 import com.example.musicapp.api.ApiClient
 import com.example.musicapp.databinding.FragmentAlbumDetailsBinding
 import com.example.musicapp.model.Track
-import com.example.musicapp.adapters.TrackAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class AlbumDetailsFragment : Fragment() {
 

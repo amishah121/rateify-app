@@ -21,6 +21,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".activities.AlbumDetailsActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".activities.StartActivity"
             android:exported="true">
             <intent-filter>
