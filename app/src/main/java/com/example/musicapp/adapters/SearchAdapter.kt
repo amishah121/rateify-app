@@ -10,7 +10,10 @@ import com.example.musicapp.R
 import com.example.musicapp.model.SearchAlbum
 import com.example.musicapp.model.getExtralargeImageUrl
 
-class SearchAdapter(private val albums: List<SearchAlbum>) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(
+    private val albums: List<SearchAlbum>,
+    private val onAlbumClick: (SearchAlbum) -> Unit
+) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_album, parent, false)
@@ -19,7 +22,7 @@ class SearchAdapter(private val albums: List<SearchAlbum>) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val album = albums[position]
-        holder.bind(album)
+        holder.bind(album, onAlbumClick)
     }
 
     override fun getItemCount(): Int {
@@ -27,17 +30,20 @@ class SearchAdapter(private val albums: List<SearchAlbum>) : RecyclerView.Adapte
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(album: SearchAlbum) {
-            // Bind album data to views in ViewHolder
+        fun bind(album: SearchAlbum, onAlbumClick: (SearchAlbum) -> Unit) {
             itemView.findViewById<TextView>(R.id.albumTitle).text = album.name
             itemView.findViewById<TextView>(R.id.albumArtist).text = album.artist
-            // Load album cover image using Glide or another image loading library
             val imageUrl = album.getExtralargeImageUrl()
             Glide.with(itemView)
                 .load(imageUrl)
-                //.placeholder(R.drawable.placeholder_image) // Placeholder image while loading
-                //.error(R.drawable.error_image) // Error image if loading fails
+                //.placeholder(R.drawable.placeholder_image) // Optional
+                //.error(R.drawable.error_image) // Optional
                 .into(itemView.findViewById(R.id.albumImageView))
+
+            // Set up the click listener for the album image
+            itemView.findViewById<View>(R.id.albumImageView).setOnClickListener {
+                onAlbumClick(album)
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.musicapp.fragments
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,14 +12,17 @@ import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
+import com.example.musicapp.activities.AlbumDetailsActivity
 import com.example.musicapp.adapters.AlbumAdapter
 import com.example.musicapp.adapters.SearchAdapter
 import com.example.musicapp.api.ApiClient
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.SearchAlbum
+import com.example.musicapp.model.getExtralargeImageUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -99,7 +103,19 @@ class SearchResultsFragment : Fragment() {
         if (context != null) {
             searchResultsRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext())
-            searchResultsRecyclerView.adapter = SearchAdapter(albums)
+            searchResultsRecyclerView.adapter = SearchAdapter(albums) { album ->
+                // Handle album click
+                val bundle = Bundle().apply {
+                    putString("albumName", album.name)
+                    putString("albumCoverUrl", album.getExtralargeImageUrl())
+                    putString("albumArtist", album.artist)
+                    // Add other album details as needed
+                }
+                val intent = Intent(activity, AlbumDetailsActivity::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(intent)
+            }
         } else {
             Log.e("SearchResultsFragment", "Context is null, cannot update RecyclerView.")
         }
