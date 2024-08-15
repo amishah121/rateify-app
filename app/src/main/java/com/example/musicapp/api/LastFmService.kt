@@ -1,5 +1,6 @@
 package com.example.musicapp.api
 
+import com.example.musicapp.model.AlbumInfoResponse
 import com.example.musicapp.model.AlbumsResponse
 import com.example.musicapp.model.SearchAlbumsResponse
 import retrofit2.Response
@@ -19,4 +20,11 @@ interface LastFmService {
         @Query("tag") tag: String,
         @Query("api_key") apiKey: String,
     ): Response<AlbumsResponse>
+
+    @GET("/2.0/?method=album.getinfo&format=json")
+    suspend fun getAlbumInfo(
+        @Query("artist") artist: String,
+        @Query("album") album: String,
+        @Query("api_key") apiKey: String
+    ): Response<AlbumInfoResponse>
 }

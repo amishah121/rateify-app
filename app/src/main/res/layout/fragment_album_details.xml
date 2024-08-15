@@ -30,10 +30,6 @@
             android:text="Album Title"
             android:layout_gravity="center" />
 
-        <!-- Rating Input -->
-
-
-        <!-- Description -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,6 +84,7 @@
             android:id="@+id/trackListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            tools:listitem="@layout/item_track"/>
     </LinearLayout>
 </ScrollView>
