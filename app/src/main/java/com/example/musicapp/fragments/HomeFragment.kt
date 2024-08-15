@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
     private fun fetchAlbums() {
         lifecycleScope.launch {
             try {
-                val slidesAlbums = fetchTopAlbumsByTag("disco")
+                val slidesAlbums = fetchTopAlbumsByTag("urban")
                 setupViewPagerWithSlides(slidesAlbums)
 
                 val popAlbums = fetchTopAlbumsByTag("pop")
@@ -165,7 +165,24 @@ class HomeFragment : Fragment() {
 
     private fun setupViewPagerWithSlides(albums: List<Album>) {
         val albumImages = albums.mapNotNull { it.getExtralargeImageUrl() }
-        val slidesAdapter = SlidesAdapter(albumImages)
+        val slidesAdapter = SlidesAdapter(albumImages) { position ->
+            // Handle image click here
+            val album = albums[position] // Get the clicked album
+
+            // Create an Intent to start the AlbumDetailsActivity
+            val bundle = Bundle().apply {
+                putString("albumName", album.name)
+                putString("albumCoverUrl", album.getExtralargeImageUrl())
+                putString("albumArtist", album.artist.name)
+                // Add other album details as needed
+            }
+
+            // Navigate to AlbumDetailsFragment with the bundle
+            val intent = Intent(activity, AlbumDetailsActivity::class.java).apply {
+                putExtras(bundle)
+            }
+            startActivity(intent)
+        }
         viewPager.adapter = slidesAdapter
         autoScrollHandler.postDelayed(autoScrollRunnable, SCROLL_DELAY)
     }
