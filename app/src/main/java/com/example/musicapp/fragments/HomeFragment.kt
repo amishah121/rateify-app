@@ -23,6 +23,7 @@ import kotlinx.coroutines.withContext
 import androidx.lifecycle.lifecycleScope
 import com.example.musicapp.activities.AlbumDetailsActivity
 import com.example.musicapp.model.getExtralargeImageUrl
+import com.example.musicapp.BuildConfig
 
 class HomeFragment : Fragment() {
 
@@ -37,7 +38,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewPager: ViewPager
 
     private val apiService = ApiClient.lastFmService
-    private val apiKey = "b6cb1c31d9407ec47411521bfb4d08ed"
+    private val apiKey = BuildConfig.LASTFM_API_KEY
 
     private val autoScrollHandler = Handler(Looper.getMainLooper())
     private val autoScrollRunnable = object : Runnable {

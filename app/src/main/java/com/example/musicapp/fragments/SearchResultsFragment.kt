@@ -23,12 +23,13 @@ import com.example.musicapp.model.getExtralargeImageUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.example.musicapp.BuildConfig
 
 class SearchResultsFragment : Fragment() {
 
     private lateinit var searchResultsRecyclerView: RecyclerView
     private val apiService = ApiClient.lastFmService
-    private val apiKey = "b6cb1c31d9407ec47411521bfb4d08ed"
+    private val apiKey = BuildConfig.LASTFM_API_KEY
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
