@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.musicapp.R
 import com.example.musicapp.activities.AlbumDetailsActivity
 import com.example.musicapp.adapters.TrackAdapter
 import com.example.musicapp.api.ApiClient
@@ -37,6 +38,11 @@ class AlbumDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val backButton: View = view.findViewById(R.id.back_button)
+        backButton.setOnClickListener {
+            requireActivity().finish()
+        }
 
         // Load album details and tracks
         loadAlbumDetails()

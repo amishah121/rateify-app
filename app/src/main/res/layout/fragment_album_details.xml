@@ -12,6 +12,15 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_margin="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <!-- Album Cover -->
         <ImageView
             android:id="@+id/albumCoverImageView"
