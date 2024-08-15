@@ -23,6 +23,11 @@ The app is currently under development and bugs and issues may be present.
 * **Kotlin Coroutines**: Uses Kotlin coroutines to manage background tasks and asynchronous operations 
 
 ### Installation
-To install the app, clone the repository and open the project in Android Studio. The app can be run on an emulator or a physical device.
+To install the app, first clone the repository and open the project in Android Studio. <br /> 
+Then, follow the instructions here to generate an API Key: https://www.last.fm/api/account/create. <br /> 
+Inside the local.properties file add the following line:
+`LASTFM_API_KEY=<your_api_key_here>` <br /> 
+Now you should be able to run the project in Android Studio on an emulator or a physical device.
 
 ### Screenshots
+[alt text](https://github.com/amishah121/music-app/blob/main/images/Screenshot%202024-08-15%20124840.png "Logo Title Text 1")
