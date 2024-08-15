@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.musicapp.model.getExtralargeImageUrl
 
 class HomeFragment : Fragment() {
@@ -135,11 +136,27 @@ class HomeFragment : Fragment() {
         if (context != null && albums.isNotEmpty()) {
             recyclerView.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            recyclerView.adapter = AlbumAdapter(albums)
+
+            // Set the adapter with the click listener
+            recyclerView.adapter = AlbumAdapter(albums) { album ->
+                // Create a Bundle to pass album details
+                val bundle = Bundle().apply {
+                    putString("albumName", album.name)
+                    putString("albumCoverUrl", album.getExtralargeImageUrl())
+                    putString("albumArtist", album.artist.name)
+                    // Add other album details as needed
+                }
+
+                // Navigate to AlbumDetailsFragment with the bundle
+                val navController = findNavController()
+                navController.navigate(R.id.home_to_albumDetails, bundle)
+            }
         } else {
             Log.e("HomeFragment", "Context is null or albums list is empty.")
         }
     }
+
+
 
     private fun setupViewPagerWithSlides(albums: List<Album>) {
         val albumImages = albums.mapNotNull { it.getExtralargeImageUrl() }

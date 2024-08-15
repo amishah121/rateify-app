@@ -11,7 +11,17 @@
         <action
             android:id="@+id/action_home_to_search"
             app:destination="@id/searchResultsFragment" />
+        <action
+            android:id="@+id/home_to_albumDetails"
+            app:destination="@id/albumDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/albumDetailsFragment"
+        android:name="com.example.musicapp.fragments.AlbumDetailsFragment"
+        android:label="Album Details"/>
+        <action
+            android:id="@+id/albumDetails_to_home"
+            app:destination="@id/homeFragment" />
     <fragment
         android:id="@+id/searchResultsFragment"
         android:name="com.example.musicapp.fragments.SearchResultsFragment"
